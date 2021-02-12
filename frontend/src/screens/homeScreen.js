@@ -19,9 +19,10 @@ class homeScreen extends Component {
 
 
   constructor(props) {
-    super(props)
-    this.getbug()
+    super(props) 
     this.state = {
+      pid:this.props.location.state.pid,
+      pname:this.props.location.state.pname,
       data: [],
       modalShow: false,
       bugTitle:"",
@@ -30,6 +31,8 @@ class homeScreen extends Component {
 
 
     }
+    this.getbug()
+
     
   }
 
@@ -38,7 +41,7 @@ class homeScreen extends Component {
 
 
   getbug = async () => {
-    const uri = `http://localhost:5000/api/allbug`
+    const uri = `http://localhost:5000/api/bug/${this.state.pid}`
     await axios.get(uri, headers).then(
       (res) => {
         this.setState({
@@ -54,10 +57,17 @@ class homeScreen extends Component {
     const description=this.state.bugDescription
     const assigned_to=this.state.bugAssignto
     const assigned_by=cookies.get('username')
+    const project_id=this.state.pid
     const uri = `http://localhost:5000/api/bug`
-    await axios.post(uri,{title,description,assigned_to,assigned_by},headers).then(
+    await axios.post(uri,{title,description,assigned_to,assigned_by,project_id},headers).then(
       (res)=>{
         console.log(res)
+        if(res.data.affectedRows==1){
+          alert('Bug added')
+          this.MyVerticallyCenteredModal()
+          this.getbug()
+
+        }
       }
 
     )
@@ -71,10 +81,6 @@ class homeScreen extends Component {
     })
 
   };
-
-
-
-
 
   render() {
     return (
@@ -103,20 +109,22 @@ class homeScreen extends Component {
             </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => { this.MyVerticallyCenteredModal() }}>Close</Button>
-            <Button onClick={() => { this.createbug() }}>Assign</Button>
+            <Button onClick={() => { this.createbug()}}>Assign</Button>
           </Modal.Footer>
         </Modal>
         </div>
 
         <div className="flex-center">
-          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossOrigin="anonymous"></link>
-          <h1>Homescreen</h1>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossOrigin="anonymous"/>
+
+        
+          <h1>{this.state.pname}</h1>
           <button onClick={() => { this.MyVerticallyCenteredModal() }} >+{cookies.get('username')}</button>
           <div className="tabl">
             {
 
 
-              this.state.data.length > 1 ? <Tablee datas={this.state.data} uname={cookies.get('username')} refresh={this.getbug} /> : <img src={img} />
+              this.state.data.length > 1 ? <Tablee datas={this.state.data} uname={cookies.get('username')} refresh={this.getbug} dorefresh={this.state.dorefresh} /> : <img src={img} />
             }
           
 

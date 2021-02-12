@@ -3,12 +3,13 @@ const con = require('../dbconn');
 module.exports.getBug =(req,resp)=>{
     
   let uid=req.params.uid;
-  console.log("uid",uid);
-  con.query(`Select * from bug where assigned_to='${uid}'`, (err, res) => {
+  let pid=req.params.pid;
+  console.log("uid",pid);
+  con.query(`Select * from bug where project_id=${pid}`, (err, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(res)
+      console.log("getBug qrres",res)
       resp.send(res);
     }
   })
@@ -28,8 +29,8 @@ module.exports.getAllBug=(req,resp)=>{
 
 module.exports.createBug=(req,resp)=>{
   console.log("bodyyyy",req.body,"headersssss",req.headers)
-  const {title,description,assigned_to,assigned_by}=req.body;
-  con.query(`INSERT INTO bug(title,description,assigned_to,assigned_by) VALUES("${title}","${description}","${assigned_by}","${assigned_to}")`,(err,res)=>{
+  const {title,description,assigned_to,assigned_by,project_id}=req.body;
+  con.query(`INSERT INTO bug(title,description,assigned_to,assigned_by,project_id) VALUES("${title}","${description}","${assigned_by}","${assigned_to}","${project_id}")`,(err,res)=>{
       if(err) console.log(err) 
       // console.log(res)
      return resp.json(res)

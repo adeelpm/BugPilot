@@ -13,3 +13,18 @@ module.exports.getProject=(req,resp)=>{
   })
 
 }
+
+module.exports.getProjectBug =(req,resp)=>{
+    
+  let uid=req.params.uid;
+  console.log("uid",uid);
+  con.query(`Select * from bug where assigned_to='${uid}'`, (err, res) => {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(res)
+      resp.send(res);
+    }
+  })
+
+}

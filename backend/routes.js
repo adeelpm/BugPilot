@@ -7,8 +7,8 @@ const { getProject } = require('./controllers/projectController');
 
 
 //Bug Routes
-router.get('/bug/:uid',isSignedIn,getBug)
-router.get('/allbug',isSignedIn,getAllBug)
+router.get('/bug/:uid/:pid',isSignedIn,getBug)
+router.get('/bug/:pid',isSignedIn,getBug)
 router.post('/bug',isSignedIn,createBug)
 router.put('/bug/:uid',isSignedIn,changeBugStatus)
 router.post('/user/adduser',signUp)

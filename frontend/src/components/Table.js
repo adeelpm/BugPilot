@@ -7,6 +7,7 @@ import { DataGrid } from '@material-ui/data-grid';
 
 
 const Tablee=(props)=> {
+   
 
     const dropdownhalder = async (id, status) => {
         const uri = `http://localhost:5000/api/bug/${id}`

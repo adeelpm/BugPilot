@@ -4,6 +4,9 @@ import headers from '../util/headers';
 import Cookies from 'universal-cookie';
 import { Dropdown } from 'react-bootstrap';
 import '../App.css'
+import {Link} from 'react-router-dom';
+import {  Modal, Button, Form, } from 'react-bootstrap/'
+
 
 
 
@@ -18,6 +21,12 @@ export class home extends Component {
 
         this.state={
             data:[],
+            projectName:"",
+            projectDescription:"",
+            modalShow: false,
+            
+
+
         }
         this.getProjet()
     }
@@ -40,16 +49,50 @@ export class home extends Component {
 
     }
 
+    MyVerticallyCenteredModal() {
+        this.setState({
+          modalShow: !this.state.modalShow
+    
+        })
+    }
+
 
     render() {
         return (
-            <div className={'flex-center'}>
-                 <button  >+{cookies.get('username')}</button>
+        <div className={'flex-center'}>
+
+<div style={{width:"100vh"}}>
+        <Modal  size="lg" show={this.state.modalShow}  aria-labelledby="contained-modal-title-vcenter"  centered>
+          <Modal.Header>
+            <Modal.Title id="contained-modal-title-vcenter">
+              Create Project
+              </Modal.Title>
+          </Modal.Header>
+          <Modal.Body style={{height:'75vh',}}>
+          <Form.Group style={{margin:'15px'}}>
+              <Form.Label>Project Title </Form.Label>
+              <Form.Control size="lg" type="text"  onChange={(event)=>{this.setState({projectName:event.target.value},()=>{console.log("bug",this.state.bugTitle)})}} value={this.state.bugTitle} placeholder=""/>           
+          </Form.Group>
+          <Form.Group style={{margin:'15px'}}>
+              <Form.Label>Description </Form.Label>
+              <Form.Control size="xl" as="textarea" onChange={(event)=>this.setState({projectDescription:event.target.value})} value={this.state.bugDescription} placeholder=""/>           
+          </Form.Group>
+          
+            </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={() => { this.MyVerticallyCenteredModal() }}>Close</Button>
+            <Button onClick={() => { this.createbug()}}>Assign</Button>
+          </Modal.Footer>
+        </Modal>
+        </div>
+
+
+       <button onClick={()=>this.MyVerticallyCenteredModal()} >+{cookies.get('username')}</button>
+
           <table className="table">
                  <thead>
                      <tr>
-                         <th scope="col">Projects</th>
-                        
+                         <th scope="col">Projects</th>  
                      </tr>
                  </thead>
                  <tbody>
@@ -58,8 +101,8 @@ export class home extends Component {
                              (item) => {
                                  return (
                                      <tr key={item.id}>
-                                         <td>{item.name}</td>
-                                         <td>{item.title}</td>
+                                         <td><Link to={{pathname:"/homescreen",state:{pid:item.id,pname:item.name}}}>{item.name}</Link></td>
+                                         <td>{item.created_on}</td>
                                          <td>{item.description}</td>
                                         
                                          <td>{item.assigned_to}</td>

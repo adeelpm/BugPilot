@@ -10,7 +10,9 @@ import '../App.css'
 function SignUp() {
     const [data, setdata] = useState({})
     const [isError, setIsError] = useState(false)
-    const[errordata, setErrorData] = useState({})
+    const[errordata, setErrorData] = useState({
+        res:""
+    })
     
 
 
@@ -37,7 +39,7 @@ function SignUp() {
         }).then((res) => {
             console.log('then res',res.data.affectedRows)
             if(res.data.affectedRows===1){
-                temp=errordata
+                temp={...errordata}
                 temp.res="User Created"
                 setErrorData(temp)
                 console.log("after SetErrorData",errordata.res)
@@ -45,10 +47,10 @@ function SignUp() {
             else if(res.data.error_code===1062)
             {
                 console.log("else if",res.data.error_message)
-                temp=errordata
+                temp={...errordata}
                 temp.res="Username already exist"
                 setErrorData(temp)
-                console.log("error data res",errordata.res)
+                console.log("5 error data res",errordata.res)
                 
             }
          
@@ -121,4 +123,5 @@ function SignUp() {
     )
 }
 
+//
 export default SignUp
