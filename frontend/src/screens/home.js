@@ -23,10 +23,7 @@ export class home extends Component {
             data:[],
             projectName:"",
             projectDescription:"",
-            modalShow: false,
-            
-
-
+            modalShow: false,      
         }
         this.getProjet()
     }

@@ -26,11 +26,11 @@ const Tablee=(props)=> {
 
     const dropdown=(row)=>{
         return(
-        <Dropdown onSelect={(key, e) => { dropdownhalder(row.id,e.target.innerText) }}>
+        <Dropdown className="posabsolute"  onSelect={(key, e) => { dropdownhalder(row.id,e.target.innerText) }}>
         <Dropdown.Toggle variant="success" id="dropdown-basic" disabled={!(uname===row.assigned_to || uname===row.assigned_by)}>
             {row.status}
         </Dropdown.Toggle>
-        <Dropdown.Menu style={{position:'absolute'}}>
+        <Dropdown.Menu>
             <Dropdown.Item >Open</Dropdown.Item>
             <Dropdown.Item >Closed</Dropdown.Item>
             <Dropdown.Item >Fixed</Dropdown.Item>

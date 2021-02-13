@@ -56,12 +56,11 @@ export default function Signin() {
   
     return (
       <div className="form-parent flex-center">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossOrigin="anonymous"/>
 
         
         <div className="form flex-center">
     
-          <TextField className="textfiel" label="Username" variant="outlined" on onChange={(e) => {
+        <TextField className="textfiel" label="Username" variant="outlined" on onChange={(e) => {
                       const temp = data
                       temp.username = e.target.value
                       setdata(temp)

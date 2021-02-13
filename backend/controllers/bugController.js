@@ -28,9 +28,11 @@ module.exports.getAllBug=(req,resp)=>{
 
 
 module.exports.createBug=(req,resp)=>{
-  console.log("bodyyyy",req.body,"headersssss",req.headers)
+  console.log("bodyyyy",req.body,"headersssss",req.headers,)
   const {title,description,assigned_to,assigned_by,project_id}=req.body;
-  con.query(`INSERT INTO bug(title,description,assigned_to,assigned_by,project_id) VALUES("${title}","${description}","${assigned_by}","${assigned_to}","${project_id}")`,(err,res)=>{
+  console.log("assigned to",assigned_to)
+  console.log("assigned by",assigned_by)
+  con.query(`INSERT INTO bug(title,description,assigned_to,assigned_by,project_id) VALUES("${title}","${description}","${assigned_to}","${assigned_by}","${project_id}")`,(err,res)=>{
       if(err) console.log(err) 
       // console.log(res)
      return resp.json(res)

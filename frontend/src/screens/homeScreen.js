@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Dropdown } from 'react-bootstrap';
 import Cookies from 'universal-cookie'
 import React, { Component} from 'react'
 import '../App.css'
@@ -27,7 +28,8 @@ class homeScreen extends Component {
       modalShow: false,
       bugTitle:"",
       bugDescription:'',
-      bugAssignto:''
+      bugAssignto:'',
+      users:[],
 
 
     }
@@ -57,6 +59,7 @@ class homeScreen extends Component {
     const description=this.state.bugDescription
     const assigned_to=this.state.bugAssignto
     const assigned_by=cookies.get('username')
+    console.log("assigned by,,,,",assigned_by)
     const project_id=this.state.pid
     const uri = `http://localhost:5000/api/bug`
     await axios.post(uri,{title,description,assigned_to,assigned_by,project_id},headers).then(
@@ -82,6 +85,29 @@ class homeScreen extends Component {
 
   };
 
+  getUsers=async()=>{
+    console.log(this.state.users.length)
+
+    
+    if(this.state.users.length<=0){
+      console.log('dfasf')
+
+      const uri = `http://localhost:5000/api/user/getmembers/${this.state.pid}`
+      
+      await axios.get(uri,headers).then(
+        (res)=>{
+          console.log(res)
+          this.setState({
+            users:res.data
+          })
+        }
+      )
+
+
+
+    }
+  }
+
   render() {
     return (
       <>
@@ -103,7 +129,19 @@ class homeScreen extends Component {
           </Form.Group>
           <Form.Group style={{margin:'15px'}} >
               <Form.Label>Assigned to </Form.Label>
-              <Form.Control  size="lg" type="text"  onChange={(event)=>this.setState({bugAssignto:event.target.value})} value={this.state.bugAssignto} placeholder=""/>           
+              <Dropdown  onSelect={(key,e)=>{this.setState({bugAssignto:e.target.innerText})}} >
+                <Dropdown.Toggle>
+                   {this.state.bugAssignto?this.state.bugAssignto:'Assign to'}
+                </Dropdown.Toggle>
+                <Dropdown.Menu  onSelect>{
+                  this.state.users.map(element => (
+                    <Dropdown.Item eventKey={element.id} >{element.username}
+                    </Dropdown.Item> ))
+                  
+                  }
+                </Dropdown.Menu>
+              </Dropdown>
+              {/* <Form.Control  size="lg" type="text"  onChange={(event)=>this.setState({bugAssignto:event.target.value})} value={this.state.bugAssignto} placeholder=""/>            */}
           </Form.Group>
           <DropzoneArea />
             </Modal.Body>
@@ -119,7 +157,7 @@ class homeScreen extends Component {
 
         
           <h1>{this.state.pname}</h1>
-          <button onClick={() => { this.MyVerticallyCenteredModal() }} >+{cookies.get('username')}</button>
+          <button onClick={() => { this.MyVerticallyCenteredModal();this.getUsers();console.log(this.state.users) }} >+{cookies.get('username')}</button>
           <div className="tabl">
             {
 

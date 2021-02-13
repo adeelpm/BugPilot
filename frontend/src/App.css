@@ -39,7 +39,6 @@
 
 .textfiel{
   margin: 10px !important;
-  padding: 10px ;
 }
 
 
@@ -86,7 +85,12 @@ input{
 }
 
 
-.dropdown, .dropend, .dropstart, .dropup {
+/* .dropdown, .dropend, .dropstart, .dropup {
+  position:absolute !important;
+} */
+
+.posabsolute
+{
   position:absolute !important;
 }
 

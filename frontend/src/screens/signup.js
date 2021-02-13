@@ -65,6 +65,7 @@ function SignUp() {
 
     return (
         <div className='form-parent flex-center'>
+
             <div className='flex-center form'  >
 
                 <TextField className="textfiel" label="Username" variant="outlined" on onChange={(e) => {
