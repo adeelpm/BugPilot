@@ -3,6 +3,7 @@ import axios from 'axios'
 import headers from '../util/headers';
 //import {Table,TableRow,TablePagination,TableHead,TableContainer,TableCell,TableBody, Paper} from '@material-ui/core';
 import { DataGrid } from '@material-ui/data-grid';
+import { XGrid } from "@material-ui/x-grid";
 
 
 
@@ -17,12 +18,10 @@ const Tablee=(props)=> {
         ).catch(
             (err)=>{console.log("status err",err)}
         )
-
-
-
-
     }
     const uname=props.uname;
+
+
 
     const dropdown=(row)=>{
         return(
@@ -66,7 +65,7 @@ const Tablee=(props)=> {
     
       return (
         <div style={{ height: '100vh', width: '75vw' }}>
-          <DataGrid rows={rw} columns={cs}   />
+          <XGrid rows={rw} columns={cs}   />
         </div>
       );
         

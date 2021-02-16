@@ -36,3 +36,26 @@ module.exports.getMembers=(req,resp)=>{
   })
 
 }
+
+
+module.exports.createProject=(req,resp)=>{
+  let uid=req.params.uid
+  let {pname,pdescription}=req.body
+
+  con.query(`Insert into project(name,description,created_by) VALUES("${pname}","${pdescription}","${uid}")`,(err,res)=>{
+    // return err?console.log(err):resp.json(res)
+    if(err){
+      return console.log("first query err",err)
+    }
+    else{
+      console.log(res)
+      con.query(`Insert into user_project(user_id,project_id) VALUES("${uid}","${res.insertId}")`,(errr,ress)=>{
+       return errr?console.log("second query err",errr):resp.json(ress)
+        
+      } )
+    }
+
+  })
+
+
+}

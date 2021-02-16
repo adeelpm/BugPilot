@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie';
 import { useHistory } from "react-router-dom"; 
-import '../App.css';
+import '../index.css';
 import React,{useState} from 'react'
 import axios from 'axios'
 import TextField from '@material-ui/core/TextField';
@@ -20,7 +20,7 @@ export default function Signin() {
   
    
     
-   const signin=async()=>{
+   const SignIn=async()=>{
   
     console.log("signin")
     var usrnme=data.username;
@@ -43,14 +43,15 @@ export default function Signin() {
         // console.log("getting cookies",cookies.get('token'))
         
         // forward('/homescreen')
-         forward('/home')
+         forward('/projectlist')
         }
   
       }
       
     ).catch(rej=>{
       console.log("Error while sign in:",rej)
-      setError(rej)}
+      // setError(rej)
+    }
       )
   }
   
@@ -69,7 +70,7 @@ export default function Signin() {
                
          <TextField className="textfiel" label="Password" type="password" variant="outlined"
                       onChange={(e) => { const temp = data; temp.password = e.target.value; setdata(temp); console.log(data) }} />
-        <Button variant='contained' color='default' onClick={(e)=>signin()}>SignIn</Button>
+        <Button variant='contained' color='default' onClick={(e)=>SignIn()}>SignIn</Button>
         <div style={{color:"red"}}> {error?error:''} </div>
                     
   

@@ -2,11 +2,13 @@ import axios from 'axios';
 import { Dropdown } from 'react-bootstrap';
 import Cookies from 'universal-cookie'
 import React, { Component} from 'react'
-import '../App.css'
+import '../index.css'
 import Tablee from "../components/Table";
 import headers from '../util/headers';
 import img from '../25.gif'
-import {  Modal, Button, Form, } from 'react-bootstrap/'
+import {  Modal, Button, Form } from 'react-bootstrap'
+import "bootstrap/dist/css/bootstrap.min.css"
+
 
 import {DropzoneArea} from 'material-ui-dropzone'
 const cookies = new Cookies()
@@ -15,7 +17,7 @@ const cookies = new Cookies()
 
 
 
-class homeScreen extends Component {
+class BugScreen extends Component {
 
 
 
@@ -153,7 +155,6 @@ class homeScreen extends Component {
         </div>
 
         <div className="flex-center">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossOrigin="anonymous"/>
 
         
           <h1>{this.state.pname}</h1>
@@ -162,7 +163,7 @@ class homeScreen extends Component {
             {
 
 
-              this.state.data.length > 1 ? <Tablee datas={this.state.data} uname={cookies.get('username')} refresh={this.getbug} dorefresh={this.state.dorefresh} /> : <img src={img} />
+              this.state.data.length > 1 ? <Tablee datas={this.state.data} uname={cookies.get('username')} refresh={this.getbug} /> : <img src={img} />
             }
           
 
@@ -175,10 +176,10 @@ class homeScreen extends Component {
   }
 }
 
-export default homeScreen;
+export default BugScreen;
 
 
-//   class App extends Component{
+//   class index extends Component{
 //     // const [modalShow, setModalShow] =useState(false);
 //     constructor(props){
 //     super(props)
