@@ -4,12 +4,12 @@ module.exports.getBug =(req,resp)=>{
     
   let uid=req.params.uid;
   let pid=req.params.pid;
-  console.log("uid",pid);
+  // console.log("uid",pid);
   con.query(`Select * from bug where project_id=${pid}`, (err, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log("getBug qrres",res)
+      // console.log("getBug qrres",res)
       resp.send(res);
     }
   })

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { Dropdown } from 'react-bootstrap';
+import { Dropdown, Nav, Navbar } from 'react-bootstrap';
 import Cookies from 'universal-cookie'
 import React, { Component} from 'react'
 import '../index.css'
@@ -36,8 +36,7 @@ class BugScreen extends Component {
 
     }
     this.getbug()
-
-    
+    console.log(this.state.pid,this.state.pname,this.state.users)
   }
 
 
@@ -82,15 +81,11 @@ class BugScreen extends Component {
   MyVerticallyCenteredModal() {
     this.setState({
       modalShow: !this.state.modalShow
-
     })
-
   };
 
-  getUsers=async()=>{
-    console.log(this.state.users.length)
-
-    
+  getMembers=async()=>{
+    console.log(this.state.users.length) 
     if(this.state.users.length<=0){
       console.log('dfasf')
 
@@ -98,7 +93,7 @@ class BugScreen extends Component {
       
       await axios.get(uri,headers).then(
         (res)=>{
-          console.log(res)
+          // console.log(res)
           this.setState({
             users:res.data
           })
@@ -139,35 +134,41 @@ class BugScreen extends Component {
                   this.state.users.map(element => (
                     <Dropdown.Item eventKey={element.id} >{element.username}
                     </Dropdown.Item> ))
-                  
                   }
                 </Dropdown.Menu>
               </Dropdown>
               {/* <Form.Control  size="lg" type="text"  onChange={(event)=>this.setState({bugAssignto:event.target.value})} value={this.state.bugAssignto} placeholder=""/>            */}
           </Form.Group>
-          <DropzoneArea />
+          <div style={{margin:'15px'}}> <DropzoneArea /></div>
             </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => { this.MyVerticallyCenteredModal() }}>Close</Button>
             <Button onClick={() => { this.createbug()}}>Assign</Button>
           </Modal.Footer>
         </Modal>
-        </div>
+      </div>
+
+        <Navbar>
+        <Navbar.Brand href="#home">Bug Pilot</Navbar.Brand>
+        <Navbar.Toggle />
+        <Navbar.Collapse className="justify-content-end">
+        <Navbar.Text>
+        Signed in as: <a href="#login">{cookies.get('username')}</a>
+        </Navbar.Text>
+        </Navbar.Collapse>
+        </Navbar>  
 
         <div className="flex-center">
-
+          
         
           <h1>{this.state.pname}</h1>
-          <button onClick={() => { this.MyVerticallyCenteredModal();this.getUsers();console.log(this.state.users) }} >+{cookies.get('username')}</button>
+
+          <Button variant="outline-primary" onClick={() => { this.MyVerticallyCenteredModal();this.getMembers();console.log(this.state.users) }} >Add Bug/Issue</Button>
+
           <div className="tabl">
             {
-
-
-              this.state.data.length > 1 ? <Tablee datas={this.state.data} uname={cookies.get('username')} refresh={this.getbug} /> : <img src={img} />
+              this.state.data!=[] ? <Tablee datas={this.state.data} uname={cookies.get('username')} refresh={this.getbug} /> : <img src={img} />
             }
-          
-
-
           </div>
 
         </div>

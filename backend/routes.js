@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const {getBug,createBug,changeBugStatus,getAllBug} = require('./controllers/bugController')
 const {signUp,removeUser,signIn,isSignedIn} = require('./controllers/authController');
-const { getProject,getMembers,createProject} = require('./controllers/projectController');
+const { getProject,getMembers,createProject, getAllUsers} = require('./controllers/projectController');
 
 
 
@@ -18,6 +18,7 @@ router.get('/user/getmembers/:pid',getMembers)
 
 router.get('/getproject/:uid',isSignedIn,getProject)
 router.post('/createproject/:uid',isSignedIn,createProject)
+router.get('/createproject/getusername/:uname',isSignedIn,getAllUsers)
 
 router.get('/testroute',isSignedIn,(req,res)=>{
     res.json({

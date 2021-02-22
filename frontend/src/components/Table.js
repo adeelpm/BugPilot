@@ -2,7 +2,6 @@ import { Dropdown } from 'react-bootstrap';
 import axios from 'axios'
 import headers from '../util/headers';
 //import {Table,TableRow,TablePagination,TableHead,TableContainer,TableCell,TableBody, Paper} from '@material-ui/core';
-import { DataGrid } from '@material-ui/data-grid';
 import { XGrid } from "@material-ui/x-grid";
 
 
@@ -64,7 +63,7 @@ const Tablee=(props)=> {
     })
     
       return (
-        <div style={{ height: '100vh', width: '75vw' }}>
+        <div style={{ height: '75vh', width: '75vw' }}>
           <XGrid rows={rw} columns={cs}   />
         </div>
       );
