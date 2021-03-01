@@ -1,16 +1,19 @@
 import axios from 'axios';
-import { Dropdown, Nav, Navbar } from 'react-bootstrap';
 import Cookies from 'universal-cookie'
 import React, { Component} from 'react'
-import '../index.css'
 import Tablee from "../components/Table";
 import headers from '../util/headers';
 import img from '../25.gif'
-import {  Modal, Button, Form } from 'react-bootstrap'
+import {  Modal, Button, Form,Dropdown, Navbar } from 'react-bootstrap'
+import {DropzoneArea} from 'material-ui-dropzone'
+
+
+
+
+import '../index.css'
 import "bootstrap/dist/css/bootstrap.min.css"
 
 
-import {DropzoneArea} from 'material-ui-dropzone'
 const cookies = new Cookies()
 
 
@@ -32,6 +35,7 @@ class BugScreen extends Component {
       bugDescription:'',
       bugAssignto:'',
       users:[],
+      files:[],
 
 
     }
@@ -44,11 +48,15 @@ class BugScreen extends Component {
 
 
   getbug = async () => {
+    console.log('getting bug')
     const uri = `http://localhost:5000/api/bug/${this.state.pid}`
     await axios.get(uri, headers).then(
       (res) => {
         this.setState({
-          data: res.data
+          data: res.data,
+        },()=>{
+        console.log("res",this.state.data)
+
         })
       }
     )
@@ -66,7 +74,7 @@ class BugScreen extends Component {
     await axios.post(uri,{title,description,assigned_to,assigned_by,project_id},headers).then(
       (res)=>{
         console.log(res)
-        if(res.data.affectedRows==1){
+        if(res.data.affectedRows===1){
           alert('Bug added')
           this.MyVerticallyCenteredModal()
           this.getbug()
@@ -76,14 +84,6 @@ class BugScreen extends Component {
 
     )
   }
-
-
-  MyVerticallyCenteredModal() {
-    this.setState({
-      modalShow: !this.state.modalShow
-    })
-  };
-
   getMembers=async()=>{
     console.log(this.state.users.length) 
     if(this.state.users.length<=0){
@@ -99,17 +99,22 @@ class BugScreen extends Component {
           })
         }
       )
-
-
-
     }
   }
+
+  MyVerticallyCenteredModal() {
+    this.setState({
+      modalShow: !this.state.modalShow
+    })
+  };
+
 
   render() {
     return (
       <>
       <div style={{width:"100vh"}}>
-        <Modal  size="lg" show={this.state.modalShow}  aria-labelledby="contained-modal-title-vcenter"  centered>
+      <script src="https://apis.google.com/js/api.js" type="text/javascript"></script>
+      <Modal  size="lg" show={this.state.modalShow}  aria-labelledby="contained-modal-title-vcenter"  centered>
           <Modal.Header>
             <Modal.Title id="contained-modal-title-vcenter">
               Create Bug
@@ -139,13 +144,14 @@ class BugScreen extends Component {
               </Dropdown>
               {/* <Form.Control  size="lg" type="text"  onChange={(event)=>this.setState({bugAssignto:event.target.value})} value={this.state.bugAssignto} placeholder=""/>            */}
           </Form.Group>
-          <div style={{margin:'15px'}}> <DropzoneArea /></div>
+          <div style={{margin:'15px'}}> <DropzoneArea  onChange={(file)=>{this.setState({files:file})}} /></div>
             </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => { this.MyVerticallyCenteredModal() }}>Close</Button>
             <Button onClick={() => { this.createbug()}}>Assign</Button>
           </Modal.Footer>
         </Modal>
+        
       </div>
 
         <Navbar>
@@ -167,7 +173,7 @@ class BugScreen extends Component {
 
           <div className="tabl">
             {
-              this.state.data!=[] ? <Tablee datas={this.state.data} uname={cookies.get('username')} refresh={this.getbug} /> : <img src={img} />
+              this.state.data.length!==0 ? <Tablee datas={this.state.data} pid={this.state.pid} uname={cookies.get('username')} refresh={this.getbug} getmem={this.getMembers} /> : <img src={img} />
             }
           </div>
 

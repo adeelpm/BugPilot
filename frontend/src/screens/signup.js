@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react'
+import React, { useState} from 'react'
 import TextField from '@material-ui/core/TextField';
 import { Button } from '@material-ui/core';
 import axios from 'axios'
@@ -37,7 +37,7 @@ function SignUp() {
             "password": data.password,
 
         }).then((res) => {
-            console.log('then res',res.data.affectedRows)
+            console.log('then res',res)
             if(res.data.affectedRows===1){
                 temp={...errordata}
                 temp.res="User Created"

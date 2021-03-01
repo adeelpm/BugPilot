@@ -6,6 +6,8 @@ import axios from 'axios'
 import TextField from '@material-ui/core/TextField';
 import { Button } from '@material-ui/core';
 
+require('dotenv').config();
+
 let cookies = new Cookies();
 
 export default function Signin() {
@@ -21,10 +23,14 @@ export default function Signin() {
    
     
    const SignIn=async()=>{
+    // console.log(process.env.API_URL)
+    // console.log(process.env.host)
+
   
     console.log("signin")
     var usrnme=data.username;
     var pwd=data.password;
+    //
     await axios.post(`http://${window.location.hostname}:5000/api/signin/`,{
       "username":usrnme,
       "password":pwd
@@ -56,6 +62,7 @@ export default function Signin() {
   }
   
     return (
+      
       <div className="form-parent flex-center">
 
         

@@ -7,6 +7,14 @@ var con = mysql.createConnection({
 
 });
 
+// var con = mysql.createConnection({
+//   host: "localhost",
+//   user: "adeelpm_bugpilot",
+//   password: "",
+//   database: "adeelpm_bugPilot"
+
+// });
+
 try {
   
 } catch (error) {
