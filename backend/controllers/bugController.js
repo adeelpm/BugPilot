@@ -31,10 +31,13 @@ module.exports.getAllBug=(req,resp)=>{
 
 module.exports.createBug=(req,resp)=>{
   console.log("bodyyyy",req.body,"headersssss",req.headers,)
-  const {title,description,assigned_to,assigned_by,project_id}=req.body;
+  const {title,description,assigned_to,assigned_by,project_id,fileurl}=req.body;
+  console.log("create fileurl",fileurl)
+  if (fileurl==[]){fileurl='NULL'}
   console.log("assigned to ",assigned_to)
   console.log("assigned by",assigned_by)
-  con.query(`INSERT INTO bug(title,description,status,assigned_to,assigned_by,project_id) VALUES("${title}","${description}","Open","${assigned_to}","${assigned_by}","${project_id}")`,(err,res)=>{
+  console.log("create fileurl",fileurl)
+  con.query(`INSERT INTO bug(title,description,status,assigned_to,assigned_by,project_id,attachments) VALUES("${title}","${description}","Open","${assigned_to}","${assigned_by}","${project_id}","${fileurl}")`,(err,res)=>{
       if(err) console.log(err) 
       // console.log(res)
      return resp.json(res)
@@ -60,8 +63,10 @@ module.exports.changeBugStatus=(req,resp)=>{
 
 module.exports.updateBug=(req,resp)=>{
   let bid=req.params.bid;
-  const {title,description,assigned_to}=req.body;
-  con.query(`UPDATE bug SET title='${title}',description='${description}',assigned_to='${assigned_to}',closed_on=current_timestamp() WHERE id='${bid}'`,(err,res)=>{
+  let {title,description,assigned_to,fileurl}=req.body;
+  console.log(fileurl,null)
+  if (fileurl==null){fileurl='NULL'}
+  con.query(`UPDATE bug SET title='${title}',description='${description}',assigned_to='${assigned_to}' ,attachments='${fileurl}',closed_on=current_timestamp() WHERE id='${bid}'`,(err,res)=>{
     // console.log(`UPDATE bug SET status='${status}',closed_on=current_timestamp() WHERE id='${uid}'`)
     if(err) console.log(err)
     console.log("gdfg",res)
@@ -83,3 +88,5 @@ module.exports.deleteBug=(req,resp)=>{
     })
   })
 }
+
+

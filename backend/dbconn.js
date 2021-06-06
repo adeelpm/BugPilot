@@ -15,12 +15,6 @@ var con = mysql.createConnection({
 
 // });
 
-try {
-  
-} catch (error) {
-  
-} 
-
 
 con.connect((err) => {
   try {

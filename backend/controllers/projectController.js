@@ -1,7 +1,7 @@
 const con = require('../dbconn');
 
 
-module.exports. getProject=(req,resp)=>{
+module.exports.getProject=(req,resp)=>{
    console.log('getting project')
     // console.log(req)
   let uid=req.params.uid;
@@ -72,6 +72,7 @@ module.exports.createProject=(req,resp)=>{
 
 module.exports.getProjectMembers=(req,resp)=>{
   uname=req.params.uname;
+  console.log(uname)
   con.query(`SELECT id,username from user where username LIKE '%${uname}%'`,(err,res)=>{
     err?console.log("getllUserserror",err):resp.json(res)
   })
@@ -88,4 +89,14 @@ module.exports.deleteProject=(req,resp)=>{
   })
 
 
+}
+
+module.exports.updateProject=(req,resp)=>{
+  pid=req.params.pid
+  con.query(`UPDATE project SET name="${req.body.pname}",description="${req.body.pdescription}" WHERE id="${pid}"`,(err,res)=>{
+    if(err)return console.log(err)
+    else(
+      resp.json(res)
+    ) 
+  })
 }

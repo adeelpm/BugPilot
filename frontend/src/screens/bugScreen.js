@@ -1,11 +1,12 @@
 import axios from 'axios';
 import Cookies from 'universal-cookie'
 import React, { Component} from 'react'
-import Tablee from "../components/Table";
+import Tablee from "../components/table";
 import headers from '../util/headers';
-import img from '../25.gif'
+// import img from '../25.gif'
 import {  Modal, Button, Form,Dropdown, Navbar } from 'react-bootstrap'
 import {DropzoneArea} from 'material-ui-dropzone'
+import firebase from '../firebaseconf'
 
 
 
@@ -36,6 +37,7 @@ class BugScreen extends Component {
       bugAssignto:'',
       users:[],
       files:[],
+      fileurl:[],
 
 
     }
@@ -49,7 +51,7 @@ class BugScreen extends Component {
 
   getbug = async () => {
     console.log('getting bug')
-    const uri = `http://localhost:5000/api/bug/${this.state.pid}`
+    const uri = `http://${window.location.hostname}:5000/api/bug/${this.state.pid}`
     await axios.get(uri, headers).then(
       (res) => {
         this.setState({
@@ -63,33 +65,97 @@ class BugScreen extends Component {
 
   }
 
-  createbug=async()=>{
+  createbug=()=>{
+
+    
+  //   Date.prototype.today = function () { 
+  //     return ((this.getDate() < 10)?"0":"") + this.getDate() +"/"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"/"+ this.getFullYear();
+  // }
+  
+  // // For the time now
+  // Date.prototype.timeNow = function () {
+  //      return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds();
+  // }
+    // const title=this.state.bugTitle
+    // const description=this.state.bugDescription
+    // const assigned_to=this.state.bugAssignto
+    const assigned_by=cookies.get('username')
+    console.log("assigned by,,,,",assigned_by)
+    const project_id=this.state.pid
+    const files=this.state.files
+    let storageref=firebase.storage().ref()
+    console.log("len",files.length)
+
+
+  if(files.length>0){
+    files.forEach((file,i,arr)=>{
+      // gs://bugpilot.appspot.com/screenshots/Screenshot (98).png
+        // let scref=storageref.child(`screenshots/${project_id+new Date().today() + " @ " + new Date().timeNow()+file.name}`)
+        let scref=storageref.child(`screenshots/${project_id+file.name}`)
+  
+  
+       scref.put(file).then((snapshot) => {
+         // fileurl.push(scref.getDownloadURL())
+         console.log('Uploaded a blob or file!');
+         scref.getDownloadURL().then(url => this.setState({ fileurl: [...this.state.fileurl, url] },()=>i+1===arr.length?this.createbugpost():null))
+  
+       });
+        console.log("arr i",i,arr.length)
+  
+       
+  
+      })
+
+  }
+  else{
+    // this.setState({
+    //   fileurl:null
+    // },()=>{console.log('else file',this.state.fileurl)})
+    this.createbugpost()
+   
+  }
+
+    
+  
+
+    
+
+  }
+
+  createbugpost=async()=>{
     const title=this.state.bugTitle
     const description=this.state.bugDescription
     const assigned_to=this.state.bugAssignto
     const assigned_by=cookies.get('username')
     console.log("assigned by,,,,",assigned_by)
     const project_id=this.state.pid
-    const uri = `http://localhost:5000/api/bug`
-    await axios.post(uri,{title,description,assigned_to,assigned_by,project_id},headers).then(
-      (res)=>{
-        console.log(res)
-        if(res.data.affectedRows===1){
-          alert('Bug added')
-          this.MyVerticallyCenteredModal()
-          this.getbug()
+    console.log("before post",this.state.fileurl);
 
+    const uri = `http://${window.location.hostname}:5000/api/bug`
+    const fileLessData={title,description,assigned_to,assigned_by,project_id,fileurl:null}
+    const data={fileurl:this.state.fileurl}
+    
+      await axios.post(uri,{title,description,assigned_to,assigned_by,project_id,fileurl:'NULL'},headers).then(
+        (res)=>{
+          console.log(res)
+          if(res.data.affectedRows===1){
+            alert('Bug added')
+            this.MyVerticallyCenteredModal()
+            this.getbug()
+          }
         }
-      }
 
-    )
-  }
+      )
+    }
+
+
+  
   getMembers=async()=>{
     console.log(this.state.users.length) 
     if(this.state.users.length<=0){
       console.log('dfasf')
 
-      const uri = `http://localhost:5000/api/user/getmembers/${this.state.pid}`
+      const uri = `http://${window.location.hostname}:5000/api/user/getmembers/${this.state.pid}`
       
       await axios.get(uri,headers).then(
         (res)=>{
@@ -144,7 +210,7 @@ class BugScreen extends Component {
               </Dropdown>
               {/* <Form.Control  size="lg" type="text"  onChange={(event)=>this.setState({bugAssignto:event.target.value})} value={this.state.bugAssignto} placeholder=""/>            */}
           </Form.Group>
-          <div style={{margin:'15px'}}> <DropzoneArea  onChange={(file)=>{this.setState({files:file})}} /></div>
+          <div style={{margin:'15px'}}> <DropzoneArea  onChange={(file)=>{console.log(file);this.setState({files:file})}} /></div>
             </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => { this.MyVerticallyCenteredModal() }}>Close</Button>
@@ -173,7 +239,7 @@ class BugScreen extends Component {
 
           <div className="tabl">
             {
-              this.state.data.length!==0 ? <Tablee datas={this.state.data} pid={this.state.pid} uname={cookies.get('username')} refresh={this.getbug} getmem={this.getMembers} /> : <img src={img} />
+           <Tablee datas={this.state.data} pid={this.state.pid} pname={this.state.pname} uname={cookies.get('username')} refresh={this.getbug} getmem={this.getMembers} />
             }
           </div>
 

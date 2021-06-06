@@ -6,7 +6,8 @@ import axios from 'axios'
 import TextField from '@material-ui/core/TextField';
 import { Button } from '@material-ui/core';
 
-require('dotenv').config();
+
+// require('dotenv').config();
 
 let cookies = new Cookies();
 
@@ -31,6 +32,7 @@ export default function Signin() {
     var usrnme=data.username;
     var pwd=data.password;
     //
+    console.log("window location",window.location.hostname,process.env.API_URL)
     await axios.post(`http://${window.location.hostname}:5000/api/signin/`,{
       "username":usrnme,
       "password":pwd
@@ -41,7 +43,7 @@ export default function Signin() {
         if(message || error) {setError(message || error)}
   
         if(res.data.status){
-        console.log("sign res",res)
+        // console.log("sign res",res)
         // console.log("sign res",res.data.qrdata[0].username)
         cookies.set('uid',res.data.qrdata[0].id,{path:'/',sameSite:true,secure:false})
         cookies.set('username',res.data.qrdata[0].username,{path:'/',sameSite:true,secure:false})
@@ -63,27 +65,39 @@ export default function Signin() {
   
     return (
       
-      <div className="form-parent flex-center">
+      <div className="form-parent flex-center" >
 
         
-        <div className="form flex-center">
+        <div className="form flex-center" >
+        
+        <div style={{position:'relative',top:'-3rem' }}><h3>Sign In</h3></div>
     
-        <TextField className="textfiel" label="Username" variant="outlined" on onChange={(e) => {
+        <TextField  style={{}} 
+        className="textfiel" label="Username" variant="outlined" onChange={(e) => {
                       const temp = data
                       temp.username = e.target.value
                       setdata(temp)
-                      console.log(data)
+                      // console.log(2+3)
+                      // console.log(data)
                   }} />
                
-         <TextField className="textfiel" label="Password" type="password" variant="outlined"
-                      onChange={(e) => { const temp = data; temp.password = e.target.value; setdata(temp); console.log(data) }} />
-        <Button variant='contained' color='default' onClick={(e)=>SignIn()}>SignIn</Button>
+         <TextField style={{ }} 
+        className="textfiel" label="Password" type="password" variant="outlined"
+                      onChange={(e) => { const temp = data; temp.password = e.target.value; setdata(temp);
+                      //  console.log(data) 
+                       }} />
+        <Button variant='contained' color='primary' onClick={(e)=>SignIn()}>SignIn</Button>
         <div style={{color:"red"}}> {error?error:''} </div>
+
+        <div>
+          <p style={{display:'inline' }}>No Account? </p>
+          <a  style={{color:'blue'}} onClick={()=>forward('/signup')}>Signup</a>
+        </div>
                     
   
         </div>
         <br/>
-        <Button variant='contained' color='default' onClick={()=>forward('/signup')}>SignUp</Button>
+        
         
    
       </div>

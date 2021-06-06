@@ -23,6 +23,7 @@ export class ProjectScreen extends Component {
 
         this.state = {
             rw: [],
+            projectId:"",
             projectName: "",
             projectDescription: "",
             createProjectModalShow: false,
@@ -35,9 +36,12 @@ export class ProjectScreen extends Component {
 
 
     getProject = async () => {
+        console.log('getting project')
+        console.log(window.location.hostname)
+
         let uid = cookies.get('uid')
 
-        const uri = `http://localhost:5000/api/project/${uid}`
+        const uri = `http://${window.location.hostname}:5000/api/project/${uid}`
         await axios.get(uri, headers).then(
             (res) => {
                 console.log("resdata", res)
@@ -59,10 +63,14 @@ export class ProjectScreen extends Component {
     }
 
     toggleModal() {
+        console.log('calling modal')
+        console.log(this.state.createProjectModalShow)
         this.setState({
-            createProjectModalShow: !this.state.createProjectModalShow
+            createProjectModalShow:!this.state.createProjectModalShow
 
         })
+        console.log(this.state.createProjectModalShow)
+        
     }
     toggleEditModal(){
         this.setState({
@@ -73,13 +81,13 @@ export class ProjectScreen extends Component {
 
     cs = [
         { field: 'id', headerName: 'ID',  },
-        { field: 'name', headerName: 'Name',
+        { field: 'name', headerName: 'Name',width:200,
          renderCell:(param)=><Link to={{pathname:"/buglist",state:{pid:param.row.id,pname:param.row.name }}}>{param.row.name}</Link> },
-         {field:'edit',headerName:'Edit',renderCell:(param)=>this.editIcon(param)}
+         {field:'edit',headerName:'Edit',disableColumnMenu:true,disableColumnResize:true,renderCell:(param)=>this.editIcon(param)}
     ];
 
     editIcon=(param)=>{
-        return(<EditIcon onClick={()=>{this.deleteProject();this.toggleEditModal(param);this.setState({projectName:param.row.name,projectDescription:param.row.description});console.log(param)}}/>)
+        return(<EditIcon onClick={()=>{this.toggleEditModal();this.setState({projectId:param.row.id,projectName:param.row.name,projectDescription:param.row.description});console.log(param)}}/>)
     }
 
     createProject=()=>{
@@ -87,10 +95,10 @@ export class ProjectScreen extends Component {
         let uid = cookies.get('uid')
         let iid=this.state.projectmembers  
         iid.push(Number.parseInt(uid, 10))
-        this.setState({projectmembers:iid})
-        const uniquearray=Array.from(Set(this.state.projectmembers))
+        // this.setState({projectmembers:iid})
+        const uniquearray=Array.from(new Set(iid))
 
-        const uri = `http://localhost:5000/api/project/${uid}`
+        const uri = `http://${window.location.hostname}:5000/api/project/${uid}`
 
         axios.post(uri,{pname:this.state.projectName,pdescription:this.state.projectDescription,pmembers:uniquearray},headers).then(
             (res)=>{console.log("createproject res",res);
@@ -112,17 +120,43 @@ export class ProjectScreen extends Component {
         console.log("getprops",props)
         if(props){
 
-        const uri = `http://localhost:5000/api/project/projectmembers/${props}`
+        const uri = `http://${window.location.hostname}:5000/api/project/projectmembers/${props}`
 
         axios.get(uri,headers).then(
             res=>{
                 this.setState({searchuser:res.data})
-                console.log("resdaaa",`'${res.data}'`)}
+                console.log("resdaaa",res)}
         )}
     }
     deleteProject(){
-console.log(process.env.API_URL)
-        // axios.delete()
+        const pid =this.state.projectId
+        const uri = `http://${window.location.hostname}:5000/api/project/${pid}`
+
+        axios.delete(uri,headers).then(
+            res=>{console.log(res)
+            alert('Project Deleted Permanently')
+            this.toggleEditModal()
+            this.getProject()
+        }
+        )
+
+    }
+    updateProject(){
+        const pid=this.state.projectId
+        const uri = `http://${window.location.hostname}:5000/api/project/edit/${pid}`
+        let uid = cookies.get('uid')
+
+
+        let iid=this.state.projectmembers  
+        iid.push(Number.parseInt(uid, 10))
+        // this.setState({projectmembers:iid})
+        const uniquearray=Array.from(new Set(iid))
+
+        axios.put(uri,{pname:this.state.projectName,pdescription:this.state.projectDescription,pmembers:uniquearray},headers).then(
+            res=>{console.log(res)
+            alert("Project Updated")}
+        )
+
 
     }
 
@@ -182,19 +216,19 @@ console.log(process.env.API_URL)
      
                             </div>
 
-                    
+                                        
 
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button onClick={() => { }}>Delete</Button>
+                            <Button onClick={() => { this.deleteProject()}}>Delete</Button>
                             <Button onClick={() => { this.toggleEditModal() }}>Close</Button>
-                            <Button onClick={() => {this.createProject() }}>Assign</Button>
+                            <Button onClick={()=>{this.updateProject()}}>Update Project</Button>
                         </Modal.Footer>
                     </Modal>
                 </div>           
 
                 <div style={{ width: "100vh" }}>
-                    <Modal size="lg" show={this.state.createProjectmodalShow} aria-labelledby="contained-modal-title-vcenter" centered>
+                    <Modal size="lg" show={this.state.createProjectModalShow} aria-labelledby="contained-modal-title-vcenter" centered>
                         <Modal.Header>
                             <Modal.Title id="contained-modal-title-vcenter">
                                 Create Project
@@ -236,15 +270,15 @@ console.log(process.env.API_URL)
                         </Modal.Body>
                         <Modal.Footer>
                             <Button onClick={() => { this.toggleModal() }}>Close</Button>
-                            <Button onClick={() => {this.createProject() }}>Assign</Button>
+                            <Button onClick={() => {this.createProject() }}>Create</Button>
                         </Modal.Footer>
                     </Modal>
                 </div>
 
 
 
-                <Button onClick={() => this.toggleModal()} variant="outline-success">Create Project</Button>
-                <div style={{ height: '80vh', width: '75vw' }}>
+                <Button style={{position:'relative',right:0}} onClick={() => this.toggleModal()} variant="outline-success">Create Project</Button>
+                <div style={{ height: '80vh', width: '95vw' }}>
 
                   <XGrid rows={this.state.rw} columns={this.cs} />
 

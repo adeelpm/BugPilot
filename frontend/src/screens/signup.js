@@ -17,7 +17,7 @@ function SignUp() {
 
 
     const signuphandler =async() => {
-        console.log("signup handler called")
+        // console.log("signup handler called")
         if (!data.username || !data.password || !data.repassword || !data.email) {
             var temp = errordata
             if (!data.username) {
@@ -37,20 +37,20 @@ function SignUp() {
             "password": data.password,
 
         }).then((res) => {
-            console.log('then res',res)
+            // console.log('then res',res)
             if(res.data.affectedRows===1){
                 temp={...errordata}
                 temp.res="User Created"
                 setErrorData(temp)
-                console.log("after SetErrorData",errordata.res)
+                // console.log("after SetErrorData",errordata.res)
             }
             else if(res.data.error_code===1062)
             {
-                console.log("else if",res.data.error_message)
+                // console.log("else if",res.data.error_message)
                 temp={...errordata}
                 temp.res="Username already exist"
                 setErrorData(temp)
-                console.log("5 error data res",errordata.res)
+                // console.log("5 error data res",errordata.res)
                 
             }
          
@@ -67,13 +67,14 @@ function SignUp() {
         <div className='form-parent flex-center'>
 
             <div className='flex-center form'  >
+            <div style={{position: 'relative', bottom: '1rem'}}><h3>Sign Up</h3></div>
 
                 <TextField className="textfiel" label="Username" variant="outlined" on onChange={(e) => {
                     const temp = data
                     temp.username = e.target.value
 
                     setdata(temp)
-                    console.log(data)
+                    // console.log(data)
                 }} />
                 <div className="err">{errordata.u}</div>
                 <TextField className="textfiel" label="E-mail" variant="outlined" onChange={(e) => {
@@ -81,7 +82,7 @@ function SignUp() {
                     temp.email = e.target.value
 
                     setdata(temp)
-                    console.log(data)
+                    // console.log(data)
                 }} />
                 <TextField className="textfiel" label="Password" type="password" variant="outlined"
                     onChange={(e) => {
@@ -89,7 +90,7 @@ function SignUp() {
                         temp.password = e.target.value
 
                         setdata(temp)
-                        console.log(data)
+                        // console.log(data)
                         if (data.repassword) {
                             if (data.password !== data.repassword) {
 
@@ -100,13 +101,13 @@ function SignUp() {
                             }
                         }
                     }} />
-                {console.log("errror", isError)}
+                {/* {console.log("errror", isError)} */}
                 <TextField required={true} error={isError} className="textfiel" label="Re-enter Password" type="password" variant="outlined" onChange={e => {
                     const temp = data
                     temp.repassword = e.target.value
                     setdata(temp)
-                    console.log(data)
-                    console.log(data.password, data.repassword)
+                    // console.log(data)
+                    // console.log(data.password, data.repassword)
                     if (data.password !== data.repassword) {
                         setIsError(true)
                     }
@@ -115,7 +116,7 @@ function SignUp() {
                     }
                 }} />
 
-                <Button variant='contained' color='default' onClick={signuphandler}>Sign up</Button>
+                <Button variant='contained' color='primary' onClick={signuphandler}>Sign up</Button>
                 <div className="err">{errordata.res}</div>
 
             </div>
